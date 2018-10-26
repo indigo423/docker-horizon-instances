@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  sslproxy:
+    container_name: 'ingress'
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./site/default:/usr/share/nginx/html
+      - ./site-conf.d:/etc/nginx/conf.d
+
