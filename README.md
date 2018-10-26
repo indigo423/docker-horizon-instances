@@ -11,3 +11,11 @@ To distinguish the instances you can use a custom version number by creating a `
 ```
 version.display=23.0.0-customer-1
 ```
+
+To access the customer instances add the following entries to your local `/etc/hosts` file and resolve to the IP of your DockerHost.
+
+When you run all locally then just add
+
+```
+127.0.0.1   customer-1.example.de customer-2.example.de customer-3.example.de customer-4.example.de
+```
