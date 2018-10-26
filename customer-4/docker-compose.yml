@@ -11,6 +11,7 @@ networks:
 services:
   database:
     image: postgres:10
+    mem_limit: 1g
     env_file:
       - .postgres.env
     networks:
@@ -19,16 +20,19 @@ services:
       - psql-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
+      interval: 5s
       timeout: 30s
       retries: 3
 
   horizon:
     image: opennms/horizon-core-web:23.0.0-1
+    mem_limit: 4g
     init: true
     env_file:
       - .opennms.env
       - .postgres.env
+    environment:
+      - JAVA_OPTS=-XX:+UseParallelGC -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
     networks:
       - customer-4-net
     depends_on:
@@ -36,7 +40,7 @@ services:
         condition: service_healthy
     volumes:
       - ./horizon-etc:/opt/opennms/etc
-      - ./horizon-data:/opennms-data
+      - ./horizon-rrd:/opt/opennms/share/rrd
       - ../global-config:/opt/opennms-etc-overlay
     command: ["-s"]
     healthcheck:
